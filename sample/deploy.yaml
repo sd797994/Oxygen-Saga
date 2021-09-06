@@ -1,0 +1,147 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sagaccountservice
+  labels:
+    app: sagaccountservice
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sagaccountservice
+  template: 
+    metadata:
+      labels: 
+        app: sagaccountservice
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "sagaccountservice"
+        dapr.io/app-port: "80"
+    spec:
+      containers:
+        - name: web
+          image: mcr.microsoft.com/dotnet/aspnet:5.0
+          command: [ "/bin/bash","-c","dotnet /app/AccountService.dll" ]  
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /run/desktop/mnt/host/e/dotnet_project/Oxygen-Saga/sample/AccountService/bin/Debug/net5.0
+        - name: v2
+          hostPath:
+            path: /run/desktop/mnt/host/c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sagagoodsservice
+  labels:
+    app: sagagoodsservice
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sagagoodsservice
+  template: 
+    metadata:
+      labels: 
+        app: sagagoodsservice
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "sagagoodsservice"
+        dapr.io/app-port: "80"
+    spec:
+      containers:
+        - name: web
+          image: mcr.microsoft.com/dotnet/aspnet:5.0
+          command: [ "/bin/bash","-c","dotnet /app/GoodsService.dll" ]  
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /run/desktop/mnt/host/e/dotnet_project/Oxygen-Saga/sample/GoodsService/bin/Debug/net5.0
+        - name: v2
+          hostPath:
+            path: /run/desktop/mnt/host/c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sagaorderservice
+  labels:
+    app: sagaorderservice
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sagaorderservice
+  template: 
+    metadata:
+      labels: 
+        app: sagaorderservice
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "sagaorderservice"
+        dapr.io/app-port: "80"
+    spec:
+      containers:
+        - name: web
+          image: mcr.microsoft.com/dotnet/aspnet:5.0
+          command: [ "/bin/bash","-c","dotnet /app/OrderService.dll" ]  
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /app
+              name: v1
+            - mountPath: /remote_debugger:rw
+              name: v2
+      volumes:
+        - name: v1
+          hostPath:
+            path: /run/desktop/mnt/host/e/dotnet_project/Oxygen-Saga/sample/OrderService/bin/Debug/net5.0
+        - name: v2
+          hostPath:
+            path: /run/desktop/mnt/host/c/Users/Administrator/vsdbg/vs2017u5
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: sagagoodsservice
+spec:
+  type: NodePort
+  selector:
+    app: sagagoodsservice
+  ports:
+  - protocol: TCP
+    port: 80 
+    targetPort: 80
+    nodePort: 30110
+---
+apiVersion: v1
+kind: Service 
+metadata:
+  name: sagaccountservice
+spec:
+  type: NodePort
+  selector:
+    app: sagaccountservice
+  ports:
+  - protocol: TCP
+    port: 80 
+    targetPort: 80
+    nodePort: 30111
