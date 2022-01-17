@@ -13,7 +13,7 @@ namespace Saga.Store.Dapr
         {
             Key = $"DaprStateStoreSagaModel_{key}";
             this.Data = data;
-            ttlInSeconds = expireTimeSecond;
+            TtlInSeconds = expireTimeSecond;
         }
         public DaprStateStoreSagaModel(string key)
         {
@@ -21,6 +21,5 @@ namespace Saga.Store.Dapr
         }
         public override string Key { get; set; }
         public override object Data { get; set; }
-        public override int? ttlInSeconds { get; set; }
     }
 }
