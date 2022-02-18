@@ -11,7 +11,7 @@ namespace Saga.HandleBuilder
 {
     public class RequestDelegate<Tobj, Tin, Tout> : BaseRequestDelegate where Tin : class, new() where Tout : class
     {
-        public RequestDelegate(string topic, HandleType handleType, MethodInfo method, Action<ErrorModel> errorHandle)
+        public RequestDelegate(string topic, HandleType handleType, MethodInfo method, Func<ErrorModel, Task> errorHandle)
         {
             Topic = topic;
             HandleType = handleType;
@@ -23,7 +23,7 @@ namespace Saga.HandleBuilder
         }
         internal Func<Tobj, Tin, Task<Tout>> MethodDelegate { get; set; }
         internal Func<Tobj, Tin, Task> MethodDelegateNoReturn { get; set; }
-        internal Action<ErrorModel> ErrorHandle { get; set; }
+        internal Func<ErrorModel, Task> ErrorHandle { get; set; }
         public override async Task Excute(SagaData jsonData, IServiceProvider lifetimeScope)
         {
             var messageobj = JsonSerializer.Deserialize<Tin>(jsonData.Data);
@@ -60,17 +60,19 @@ namespace Saga.HandleBuilder
                     var prev = ConfigurationManager.GetConfig().GetPrevTopicByTopic(jsonData.FlowName, jsonData.Topic);
                     if (prev != null)
                         await lifetimeScope.GetService<ISagaManager>().StartOrNext(prev.RollbackTopic, e.RollbackModel);
+                    else
+                        await ErrorHandle(new ErrorModel(jsonData.Topic, JsonSerializer.Serialize(messageobj), "", e));
                 }
                 else
                 {
                     if (ErrorHandle != null)
-                        ErrorHandle(new ErrorModel(jsonData.Topic, JsonSerializer.Serialize(messageobj), e.RollbackModel == null ? "" : JsonSerializer.Serialize(e.RollbackModel), e));
+                        await ErrorHandle(new ErrorModel(jsonData.Topic, JsonSerializer.Serialize(messageobj), e.RollbackModel == null ? "" : JsonSerializer.Serialize(e.RollbackModel), e));
                 }
             }
             catch (Exception e)
             {
                 if (ErrorHandle != null)
-                    ErrorHandle(new ErrorModel(jsonData.Topic, JsonSerializer.Serialize(messageobj), "", e));
+                    await ErrorHandle(new ErrorModel(jsonData.Topic, JsonSerializer.Serialize(messageobj), "", e));
             }
         }
     }

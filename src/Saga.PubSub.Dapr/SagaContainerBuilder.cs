@@ -26,7 +26,7 @@ namespace Saga.PubSub.Dapr
             services.AddSingleton<ISagaEventHandler, SagaEventHandlerDaprImpl>();
             ConfigurationManager.SetConfig(sagaConfiguration);
         }
-        public static void RegisterSagaHandler(this IApplicationBuilder applicationbuilder, Action<ErrorModel> errorHandle)
+        public static void RegisterSagaHandler(this IApplicationBuilder applicationbuilder, Func<ErrorModel, Task> errorHandle)
         {
             //注册中间件用于写入saga特定的eventhandle到dapr的/dapr/subscribe路由终结点用于dapr注册订阅器
             applicationbuilder.UseMiddleware<DparSubscribeMiddleware>();

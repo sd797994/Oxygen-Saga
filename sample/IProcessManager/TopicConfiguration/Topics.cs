@@ -12,34 +12,37 @@ namespace IProcessManager
     {
         public struct GoodsHandler
         {
+            const string ServiceName = "GoodsService";
             /// <summary>
             /// 预扣库存
             /// </summary>
-            public const string PreDeductInventory = "GoodsService.PreDeductInventory";
+            public const string PreDeductInventory = $"{ServiceName}.PreDeductInventory";
             /// <summary>
             /// 库存回滚
             /// </summary>
-            public const string InventoryRollback = "GoodsService.InventoryRollback";
+            public const string InventoryRollback = $"{ServiceName}.InventoryRollback";
 
         }
-        public struct AccountHandler 
+        public struct AccountHandler
         {
+            const string ServiceName = "AccountService";
             /// <summary>
             /// 预扣余额
             /// </summary>
-            public const string PreDeductBalance = "AccountService.PreDeductBalance";
+            public const string PreDeductBalance = $"{ServiceName}.PreDeductBalance";
             /// <summary>
             /// 余额回滚
             /// </summary>
-            public const string BalanceRollback = "AccountService.BalanceRollback";
+            public const string BalanceRollback = $"{ServiceName}.BalanceRollback";
         }
 
-        public struct OrderHandler 
+        public struct OrderHandler
         {
+            const string ServiceName = "OrderService";
             /// <summary>
             /// 订单生成
             /// </summary>
-            public const string OrderCreate = "OrderService.OrderCreate";
+            public const string OrderCreate = $"{ServiceName}.OrderCreate";
         }
     }
 }

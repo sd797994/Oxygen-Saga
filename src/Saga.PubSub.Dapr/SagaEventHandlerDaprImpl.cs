@@ -25,6 +25,7 @@ namespace Saga.PubSub.Dapr
 
         async Task SagaSubscribeHandle(HttpContext context)
         {
+            HttpContextExtension.ContextWapper.Value = new OxygenHttpContextWapper($"/SagaSubscribe/{ConfigurationManager.GetConfig().ServiceName}", context.RequestServices.GetService<ILifetimeScope>(), context);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = 200;
             var storeProvider = context.RequestServices.GetService<IStoreProvider>();
