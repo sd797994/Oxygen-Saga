@@ -18,7 +18,7 @@ namespace Saga.PubSub.Rabbitmq
             services.AddSingleton<ISagaEventHandler, SagaEventHandlerRabbitmqImpl>();
             ConfigurationManager.SetConfig(sagaConfiguration);
         }
-        public static void RegisterSagaHandler(this IApplicationBuilder applicationbuilder, Func<ErrorModel, Task> errorHandle)
+        public static void RegisterSagaHandler(this IApplicationBuilder applicationbuilder, Func<IServiceProvider, ErrorModel, Task> errorHandle)
         {
             HandleProxyFactory.RegiterAllHandle(errorHandle);
             applicationbuilder.ApplicationServices.GetService<ISagaEventHandler>().ConsumerReceivedHandle(applicationbuilder);

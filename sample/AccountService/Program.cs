@@ -29,8 +29,8 @@ builder.Services.AddAutofac();
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 var app = builder.Build();
 OxygenStartup.Configure(app, app.Services);
-app.RegisterSagaHandler(async (x) => {
-    Console.WriteLine($"主题{x.SourceTopic}消费异常,原始数据json:{x.SourceDataJson},{(x.ErrorDataJson == null ? "" : $"异常回调json:{x.ErrorDataJson}，")}需要人工处理");
+app.RegisterSagaHandler(async (ctx, err) => {
+    Console.WriteLine($"主题{err.SourceTopic}消费异常,原始数据json:{err.SourceDataJson},{(err.ErrorDataJson == null ? "" : $"异常回调json:{err.ErrorDataJson}，")}需要人工处理");
     await Task.CompletedTask;
 });
 await app.RunAsync();
