@@ -7,7 +7,6 @@ using Oxygen.Common.Implements;
 using Oxygen.Common.Interface;
 using Saga.HandleBuilder;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -34,9 +33,10 @@ namespace Saga.PubSub.Dapr
             using (var stream = new MemoryStream())
             {
                 await context.Request.Body.CopyToAsync(stream);
-                SagaData data = serialize.DeserializesJson<TempDataByEventHandleInput<SagaData>>(Encoding.UTF8.GetString(stream.ToArray())).GetData();
+                SagaData data = default;
                 try
                 {
+                    data = serialize.DeserializesJson<TempDataByEventHandleInput<SagaData>>(Encoding.UTF8.GetString(stream.ToArray())).GetData();
                     var oldData = await storeProvider.GetKey(data.StoreKey);
                     if (oldData == null || oldData.StoreState == SagaDataState.Error)
                     {
@@ -60,7 +60,6 @@ namespace Saga.PubSub.Dapr
                     await context.Response.WriteAsync(JsonSerializer.Serialize(DefaultEventHandlerResponse.Default()));
                 }
             }
-
         }
     }
 }
