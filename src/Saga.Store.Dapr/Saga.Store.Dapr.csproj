@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Oxygen-Dapr" Version="0.3.2" />
+    <PackageReference Include="Oxygen-Dapr" Version="0.3.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Saga\Saga.csproj" />

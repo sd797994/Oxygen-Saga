@@ -40,6 +40,7 @@ namespace Saga.PubSub.Dapr
                         submodellist.Add(new SubscribeModel(DaprConfig.GetCurrent().PubSubCompentName, ConfigurationManager.GetConfig().ServiceName, $"/SagaSubscribe/{ConfigurationManager.GetConfig().ServiceName}"));
                         newResponse.Seek(0, SeekOrigin.Begin);
                     }
+                    catch(Exception) { }
                     finally
                     {
                         context.Response.ContentType = "application/json";
